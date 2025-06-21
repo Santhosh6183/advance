@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Advanced Task Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🗂️ Advanced Task Manager</h1>
+
+    <div class="input-row">
+      <input type="text" id="taskInput" placeholder="Enter your task" />
+      <select id="taskCategory">
+        <option value="work">🛠️ Work</option>
+        <option value="personal">🏡 Personal</option>
+        <option value="urgent">🚨 Urgent</option>
+      </select>
+      <button id="addTaskBtn">➕ Add</button>
+    </div>
+
+    <label class="switch">
+      <input type="checkbox" id="toggleTheme" />
+      <span class="slider"></span>
+      <span class="theme-label">🌗 Dark Mode</span>
+    </label>
+
+    <ul id="taskList"></ul>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
