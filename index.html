@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Course Registration</title>
+  <style>
+  :root {
+    --bg-color: rgba(255, 255, 255, 0.95);
+    --text-color: #333;
+    --input-bg: #fff;
+    --label-color: #999;
+    --border-color: #ccc;
+    --highlight: #007BFF;
+    --box-glow: rgba(0, 123, 255, 0.4);
+  }
+
+  body.dark {
+    --bg-color: rgba(34, 34, 34, 0.95);
+    --text-color: #eee;
+    --input-bg: #2a2a2a;
+    --label-color: #ccc;
+    --border-color: #444;
+    --highlight: #66b2ff;
+    --box-glow: rgba(102, 178, 255, 0.4);
+    background: #121212;
+    color: #eee;
+  }
+
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: url('online.jpg') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .overlay {
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    animation: fadeIn 0.8s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .container {
+    background: var(--bg-color);
+    width: 100%;
+    max-width: 440px;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 12px 40px var(--box-glow);
+    position: relative;
+    transition: background 0.3s ease, color 0.3s ease;
+    animation: slideUp 0.6s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: #28a745;
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 0 4px 4px 0;
+  }
+
+  h2 {
+    text-align: center;
+    color: var(--text-color);
+    margin-bottom: 30px;
+    font-size: 28px;
+    letter-spacing: 1px;
+  }
+
+  .form-group {
+    position: relative;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--input-bg);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 0 transparent;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: var(--highlight);
+    box-shadow: 0 0 6px var(--highlight);
+    outline: none;
+  }
+
+  .form-group label {
+    position: absolute;
+    top: 12px;
+    left: 40px;
+    color: var(--label-color);
+    font-size: 14px;
+    transition: 0.2s ease all;
+    pointer-events: none;
+  }
+
+  .form-group input:focus + label,
+  .form-group input:not(:placeholder-shown) + label,
+  .form-group select:focus + label,
+  .form-group select:valid + label {
+    top: -10px;
+    left: 35px;
+    font-size: 12px;
+    color: var(--highlight);
+    background: var(--bg-color);
+    padding: 0 6px;
+    border-radius: 6px;
+  }
+
+  .input-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 16px;
+  }
+
+  .feedback-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+  }
+
+  .form-group.valid input {
+    border-color: #28a745;
+    box-shadow: 0 0 5px #28a74588;
+  }
+
+  .form-group.invalid input {
+    border-color: #dc3545;
+    box-shadow: 0 0 5px #dc354588;
+  }
+
+  input[type="button"] {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    color: white;
+    border: none;
+    padding: 14px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.2s ease, background 0.3s;
+  }
+
+  input[type="button"]:hover {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    transform: scale(1.02);
+  }
+
+  input[type="button"]:active {
+    transform: scale(0.98);
+  }
+
+  .message {
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    margin-top: 12px;
+    transition: color 0.3s ease;
+  }
+
+  .error { color: #dc3545; }
+  .success { color: #28a745; }
+
+  .dark-toggle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .dark-toggle:hover {
+    transform: rotate(15deg);
+  }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s;
+  }
+
+  .modal-content {
+    background: var(--bg-color);
+    color: var(--text-color);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    animation: scaleIn 0.3s ease-in-out;
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-content h3 {
+    margin-bottom: 15px;
+  }
+
+  .modal-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+
+  .btn-confirm {
+    background-color: #3996d4;
+    color: #fff;
+  }
+
+  .btn-cancel {
+    background-color: #36e9d1;
+    color: #fff;
+  }
+
+  .btn-confirm:hover {
+    background-color: #218838;
+  }
+
+  .btn-cancel:hover {
+    background-color: #c82333;
+  }
+</style>
+
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="container" id="formBox">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</div>
+      <h2>Online Course Registration</h2>
+      <form id="regForm">
+        <div class="form-group" id="nameGroup">
+          <span class="input-icon">👤</span>
+          <input type="text" id="name" placeholder=" " oninput="validateInput('name')" />
+          <label for="name">Name</label>
+          <span class="feedback-icon" id="nameIcon"></span>
+        </div>
+        <div class="form-group" id="emailGroup">
+          <span class="input-icon">📧</span>
+          <input type="email" id="email" placeholder=" " oninput="validateInput('email')" />
+          <label for="email">Email</label>
+          <span class="feedback-icon" id="emailIcon"></span>
+        </div>
+        <div class="form-group" id="phoneGroup">
+          <span class="input-icon">📱</span>
+          <input type="text" id="phone" placeholder=" " oninput="validateInput('phone')" />
+          <label for="phone">Phone</label>
+          <span class="feedback-icon" id="phoneIcon"></span>
+        </div>
+        <div class="form-group">
+          <span class="input-icon">🎓</span>
+          <select id="course" required>
+            <option value="" disabled selected hidden></option>
+            <option value="Java Full Stack">Java Full Stack</option>
+            <option value="Python Data Science">Python Data Science</option>
+            <option value="Web Development">Web Development</option>
+          </select>
+          <label for="course">Course</label>
+        </div>
+        <input type="button" value="Register" onclick="showModal()" />
+        <input type="button" value="Reset Form" onclick="resetForm()" style="margin-top: 10px; background: #a424d6;" />
+        <input type="button" value="Clear All" onclick="clearAll()" style="margin-top: 10px; background: #35dcc0;" />
+        <p id="message" class="message"></p>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="confirmModal">
+    <div class="modal-content">
+      <h3>Confirm Registration</h3>
+      <p>Are you sure you want to register?</p>
+      <button class="btn-confirm" onclick="registerUser()">Yes</button>
+      <button class="btn-cancel" onclick="closeModal()">No</button>
+    </div>
+  </div>
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+    }
+
+    function validateInput(id) {
+      const value = document.getElementById(id).value.trim();
+      const group = document.getElementById(id + "Group");
+      const icon = document.getElementById(id + "Icon");
+
+      let valid = false;
+      if (id === "name") valid = value.length >= 2;
+      else if (id === "email") valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      else if (id === "phone") valid = /^\d{10}$/.test(value);
+
+      group.classList.remove("valid", "invalid");
+      icon.textContent = "";
+
+      if (value !== "") {
+        group.classList.add(valid ? "valid" : "invalid");
+        icon.textContent = valid ? "✔️" : "❌";
+      }
+    }
+
+    function showModal() {
+      document.getElementById("confirmModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("confirmModal").style.display = "none";
+    }
+
+    async function registerUser() {
+      closeModal();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const course = document.getElementById("course").value;
+      const message = document.getElementById("message");
+      const progressBar = document.getElementById("progressBar");
+
+      if (!name || !email || !phone || !course) {
+        message.textContent = "All fields are required.";
+        message.className = "message error";
+        return;
+      }
+
+      if (!/^\d{10}$/.test(phone)) {
+        message.textContent = "Phone must be 10 digits.";
+        message.className = "message error";
+        return;
+      }
+
+      progressBar.style.width = "50%";
+      const userData = { name, email, phone, course };
+      localStorage.setItem("lastRegistration", JSON.stringify(userData));
+
+      try {
+        const response = await fetch("http://localhost:3000/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.status === "success") {
+          message.textContent = "✅ Registration successful and confirmation email sent.";
+          message.className = "message success";
+        } else {
+          message.textContent = "❌ Registration failed: " + (result.message || "Unknown server error.");
+          message.className = "message error";
+        }
+
+        resetForm();
+        setTimeout(() => progressBar.style.width = "0%", 1000);
+      } catch (err) {
+        console.error("❌ Error:", err);
+        message.className = "message error";
+        progressBar.style.width = "0%";
+      }
+    }
+
+    function resetForm() {
+      document.getElementById("regForm").reset();
+      document.querySelectorAll(".feedback-icon").forEach(e => e.textContent = "");
+      document.querySelectorAll(".form-group").forEach(g => g.classList.remove("valid", "invalid"));
+      document.getElementById("message").textContent = "";
+    }
+
+    function clearAll() {
+      resetForm();
+      localStorage.removeItem("lastRegistration");
+    }
+
+    window.onload = () => {
+      const saved = JSON.parse(localStorage.getItem("lastRegistration"));
+      if (saved) {
+        document.getElementById("name").value = saved.name || "";
+        document.getElementById("email").value = saved.email || "";
+        document.getElementById("phone").value = saved.phone || "";
+        document.getElementById("course").value = saved.course || "";
+      }
+    };
+  </script>
+</body>
+</html>
